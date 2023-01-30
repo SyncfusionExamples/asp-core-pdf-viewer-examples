@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportImageindotnet6", "ExportImageindotnet6\ExportImageindotnet6.csproj", "{E818BC99-6ACD-4629-BC94-489EA9D451CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E818BC99-6ACD-4629-BC94-489EA9D451CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E818BC99-6ACD-4629-BC94-489EA9D451CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E818BC99-6ACD-4629-BC94-489EA9D451CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E818BC99-6ACD-4629-BC94-489EA9D451CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D81D20F-C01D-4C74-B619-95667D8CB21E}
+	EndGlobalSection
+EndGlobal
