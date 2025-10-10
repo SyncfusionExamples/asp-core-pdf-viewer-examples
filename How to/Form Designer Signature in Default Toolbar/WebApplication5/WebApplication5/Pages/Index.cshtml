@@ -1,0 +1,70 @@
+﻿@page "{handler?}"
+@using Syncfusion.EJ2.PdfViewer;
+@using Syncfusion.EJ2
+@using System.IO;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var toolItem1 = new { id = "signature", prefixIcon = "e-icons e-signature", tooltipText = "Add Signature", align = "left", template = "<ul id='signatureMenu'></ul>" };
+
+    // Directly create a List<object> for toolbar items
+    List<object> toolbarItems = new List<object>
+    {
+        toolItem1,
+        "OpenOption",
+        "PageNavigationTool",
+        "MagnificationTool",
+        "PanTool",
+        "SelectionTool",
+        "SearchOption",
+        "PrintOption",
+        "DownloadOption",
+        "UndoRedoTool",
+        "AnnotationEditTool",
+        "FormDesignerEditTool",
+        "CommentTool",
+        "SubmitForm"
+    };
+
+    PdfViewerToolbarSettings toolbarSettings = new PdfViewerToolbarSettings()
+    {
+        ShowTooltip = true,
+        ToolbarItems = toolbarItems // Assign the List<object> directly
+    };
+}
+<br>
+<br>
+<ejs-pdfviewer id="pdfviewer" style="height:600px" toolbarSettings="toolbarSettings" documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf" documentLoad="documentLoad">
+</ejs-pdfviewer>
+<script>
+    var isSignatureAdded = false;
+    function documentLoad(args) {
+        if (!isSignatureAdded) {
+            var signatureMenuItems = [
+                {
+                    iconCss: 'e-icons e-signature',
+                    items: [{ text: 'Add Signature' }, { text: 'Add Initial' }],
+                },
+            ];
+            new ej.navigations.Menu(
+                {
+                    items: signatureMenuItems,
+                    showItemOnClick: true,
+                    select: onSignatureClick,
+                },
+                '#signatureMenu'
+            );
+            isSignatureAdded = true;
+        }
+    };
+    function onSignatureClick(event) {
+        var viewer = document.getElementById('pdfviewer').ej2_instances[0];
+        if (event.element.innerText === 'Add Signature') {
+            viewer.designerMode = true;
+            viewer.formDesignerModule.setFormFieldMode("SignatureField");
+        } else if (event.element.innerText === 'Add Initial') {
+            viewer.designerMode = true;
+            viewer.formDesignerModule.setFormFieldMode("InitialField");
+        }
+    }
+</script>
