@@ -34,10 +34,12 @@
 }
 <br>
 <br>
+<!-- PDF Viewer component with toolbar settings and document path -->
 <ejs-pdfviewer id="pdfviewer" style="height:600px" toolbarSettings="toolbarSettings" documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf" documentLoad="documentLoad">
 </ejs-pdfviewer>
 <script>
-    var isSignatureAdded = false;
+    var isSignatureAdded = false; // Flag to ensure menu is added only once
+// Event triggered when the document is loaded
     function documentLoad(args) {
         if (!isSignatureAdded) {
             var signatureMenuItems = [
@@ -46,6 +48,7 @@
                     items: [{ text: 'Add Signature' }, { text: 'Add Initial' }],
                 },
             ];
+  // Initialize Syncfusion Menu component for signature options
             new ej.navigations.Menu(
                 {
                     items: signatureMenuItems,
@@ -57,6 +60,7 @@
             isSignatureAdded = true;
         }
     };
+// Handles click events on signature menu items
     function onSignatureClick(event) {
         var viewer = document.getElementById('pdfviewer').ej2_instances[0];
         if (event.element.innerText === 'Add Signature') {
