@@ -1,0 +1,29 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <button id="extractPage" onclick="extractPage()">Extract Page</button>
+    <ejs-pdfviewer  id="pdfviewer" 
+                    style="height:600px" 
+                    pageOrganizerSettings="@(new {CanExtractPages = true})" 
+                    resourceUrl="https://cdn.syncfusion.com/ej2/31.1.23/dist/ej2-pdfviewer-lib"
+                    documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf">
+    </ejs-pdfviewer>
+</div>
+
+<script>
+  function extractPage() {
+    var viewer = document.getElementById('pdfviewer')?.ej2_instances[0];
+
+    //Extract Pages 1,2
+    var array = viewer.extractPages('1,2');
+
+    //Load the Extracted Pages
+    viewer.load(array,'');
+    //Print the Base64 for reference
+    console.log(array);
+  }
+</script>
