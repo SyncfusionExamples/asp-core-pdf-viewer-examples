@@ -1,5 +1,5 @@
 # asp-core-pdf-viewer-examples
-This repository contains examples of Syncfusion&reg; PDF Viewer (Web) control.
+This repository contains examples of PDF Viewer (Web) control.
 
 ## Key features
 The Asp.Net Core PDF Viewer component allows to view, print, and annotate the PDF files in your Asp.Net Core applications and its key features are,
