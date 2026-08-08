@@ -1,0 +1,40 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Search text and redact";
+}
+<div class="content-wrapper">
+    <!-- Separate buttons: Show and Hide Redaction toolbar -->
+    <div style="margin-bottom:8px; display:flex; gap:8px;">
+        <button type="button" onclick="showRedactionToolbar()">Show Redaction Toolbar</button>
+        <button type="button" onclick="hideRedactionToolbar()">Hide Redaction Toolbar</button>
+    </div>
+    <ejs-pdfviewer
+        id="pdfViewer"
+        style="height:640px; display:block"
+        resourceUrl="https://cdn.syncfusion.com/ej2/31.2.12/dist/ej2-pdfviewer-lib"
+        documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf">
+    </ejs-pdfviewer>
+</div>
+<script type="text/javascript">
+    window.onload = function () {
+        window.viewer = document.getElementById('pdfViewer').ej2_instances[0];
+        // Includes RedactionEditTool in the primary toolbar
+        viewer.toolbarSettings = {
+            toolbarItems: [
+                'OpenOption', 'UndoRedoTool', 'PageNavigationTool', 'MagnificationTool', 'PanTool',
+                'SelectionTool', 'CommentTool', 'SubmitForm', 'AnnotationEditTool', 'RedactionEditTool',
+                'FormDesignerEditTool', 'SearchOption', 'PrintOption', 'DownloadOption'
+            ]
+        };
+    };
+    // Separate handlers for show/hide (no toggle)
+    function showRedactionToolbar() {
+        if (!window.viewer) return;
+        viewer.toolbar.showRedactionToolbar(true);
+    }
+    function hideRedactionToolbar() {
+        if (!window.viewer) return;
+        viewer.toolbar.showRedactionToolbar(false);
+    }
+</script>
