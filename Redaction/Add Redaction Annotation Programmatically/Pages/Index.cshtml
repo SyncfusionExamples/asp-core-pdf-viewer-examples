@@ -1,0 +1,127 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Redaction programmatic support (All-in-one)";
+}
+<div class="text-center">
+    <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;">
+        <button type="button" class="e-btn" onclick="addRedaction()">Add Redaction</button>
+        <button type="button" class="e-btn" onclick="deleteFirstRedaction()">Delete First Redaction</button>
+        <button type="button" class="e-btn" onclick="editRedaction()">Edit Redaction</button>
+        <button type="button" class="e-btn" onclick="addPageRedactions()">Add Page Redactions (1,3,5,7)</button>
+        <button type="button" class="e-btn e-primary" onclick="applyRedaction()">Apply Redaction</button>
+    </div>
+
+    <ejs-pdfviewer
+        id="pdfViewer"
+        style="height:640px; display:block"
+        resourceUrl="https://cdn.syncfusion.com/ej2/31.2.12/dist/ej2-pdfviewer-lib"
+        documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf"
+        isExtractText="true">
+    </ejs-pdfviewer>
+</div>
+
+<script type="text/javascript">
+    // Make the viewer globally accessible to all handlers
+    window.onload = function () {
+        window.viewer = document.getElementById('pdfViewer').ej2_instances[0];
+
+        // Include Redaction UI entry in the main toolbar
+        viewer.toolbarSettings = {
+            toolbarItems: [
+                'OpenOption', 'UndoRedoTool', 'PageNavigationTool', 'MagnificationTool', 'PanTool',
+                'SelectionTool', 'CommentTool', 'SubmitForm', 'AnnotationEditTool', 'RedactionEditTool',
+                'FormDesignerEditTool', 'SearchOption', 'PrintOption', 'DownloadOption'
+            ]
+        };
+
+        // Default redaction appearance settings (used by UI and when not overridden)
+        viewer.redactionSettings = {
+            overlayText: 'Confidential',
+            markerFillColor: '#FF0000',
+            markerBorderColor: '#000000',
+            isRepeat: false,
+            fillColor: '#000000',     // final fill color after redaction is applied
+            fontColor: '#FFFFFF',
+            fontSize: 12,
+            fontFamily: 'Arial',
+            textAlign: 'Center'
+        };
+    };
+
+    // 1) Add a single redaction annotation programmatically
+    function addRedaction() {
+        if (!window.viewer) return;
+        viewer.annotation.addAnnotation('Redaction', {
+            bound: { x: 200, y: 480, width: 160, height: 80 },
+            pageNumber: 1,
+            overlayText: 'Confidential',
+            fillColor: '#000000',      // preview overlay/background
+            fontColor: '#FFFFFF',
+            fontSize: 12,
+            fontFamily: 'Arial',
+            markerFillColor: '#FF0000',
+            markerBorderColor: '#000000',
+            beforeRedactionsApplied: false
+        });
+        console.log('Redaction added');
+    }
+
+    // 2) Delete the first redaction annotation (if present)
+    function deleteFirstRedaction() {
+        if (!window.viewer) return;
+        var list = viewer.annotationCollection || [];
+        var firstRedaction = null;
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].subject === 'Redaction') { firstRedaction = list[i]; break; }
+        }
+        if (firstRedaction) {
+            viewer.annotationModule.deleteAnnotationById(firstRedaction.annotationId);
+            console.log('First redaction deleted');
+        } else {
+            console.warn('No redaction found to delete.');
+        }
+    }
+
+    // 3) Edit existing redaction annotation properties
+    function editRedaction() {
+        if (!window.viewer) return;
+        var list = viewer.annotationCollection || [];
+        var edited = false;
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            if (item.subject === 'Redaction') {
+                item.overlayText = 'EditedAnnotation';
+                item.markerFillColor = '#22FF00';
+                item.markerBorderColor = '#000000';
+                item.isRepeat = true;
+                item.fillColor = '#1F1F1F';
+                item.fontColor = '#FFD400';
+                item.fontSize = 14;
+                item.fontFamily = 'Symbol';
+                item.textAlign = 'Right';
+                item.beforeRedactionsApplied = false;
+                viewer.annotation.editAnnotation(item);
+                edited = true;
+            }
+        }
+        if (!edited) console.warn('No redaction found to edit.');
+        else console.log('Redaction(s) edited');
+    }
+
+    // 4) Add page redactions (entire pages) by page numbers (1-based)
+    function addPageRedactions() {
+        if (!window.viewer) return;
+        viewer.annotation.addPageRedactions([1, 3, 5, 7]);
+        console.log('Page redactions added for pages 1, 3, 5, 7');
+    }
+
+
+    // 5) Permanently apply all redaction marks
+    function applyRedaction() {
+        if (!window.viewer) return;
+        // Irreversible: original content will be removed
+        viewer.annotation.redact();
+        console.log('Redaction applied');
+    }
+</script>
