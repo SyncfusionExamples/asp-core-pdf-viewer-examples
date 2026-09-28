@@ -1,0 +1,14 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div id="container">
+    <ejs-pdfcomparer id="pdfviewer"
+                     style="height:600px"
+                     originalDocumentPath="https://cdn.syncfusion.com/content/pdf/original-document.pdf"
+                     modifiedDocumentPath="https://cdn.syncfusion.com/content/pdf/modified-document.pdf"
+                     resourceUrl="https://cdn.syncfusion.com/ej2/34.2.2/dist/ej2-pdfviewer-lib">
+    </ejs-pdfcomparer>
+</div>
