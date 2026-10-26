@@ -45,7 +45,10 @@
                    style="height: 600px;"
                    documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf"
                    resourceUrl="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2-pdfviewer-lib"
-                  >
+                   documentLoad="documentLoad"
+                   resourcesLoaded="handleResourcesLoaded"
+                   enableCollaborativeEditing="true"
+                   documentChanged="handleDocumentChanged">
     </ejs-pdfviewer>
 </div>
 <script>
@@ -55,13 +58,14 @@
 
     const userList = ['RIO', 'JOHN', 'MAXY', 'SHAI', 'SRI'];
     const currentUserName = userList[Math.floor(Math.random() * userList.length)];
-    const SERVICE_URL = 'http://localhost:8081/';
+    //REPLACE THIS WITH SERVICE URL CURRENTLY RUNNING
+    const SERVICE_URL = 'https://localhost:5001/';
 
     // ============================================================
     // State Management
     // ============================================================
 
-    let appState = {
+    let appState = {    
         isDocumentLoaded: false,
         collaborationStatus: 'initializing',
         currentUser: currentUserName,
@@ -134,7 +138,9 @@
             throw error;
         }
     }
-
+    function documentLoad(){
+        appState.adapter.updatePendingOperations();
+    }
     // ============================================================
     // UI Update Functions
     // ============================================================
@@ -198,7 +204,10 @@
                         // Step 2: Create and configure CollaborationClient
                         const client = new ej.collaborator.CollaborationClient(adapter, {
                             serviceUrl: SERVICE_URL,
-                            connectionType: 'websocket',
+                            // USE BELOW IF YOU USE NODE JS WEB SERVICE
+                            //connectionType: 'websocket',
+                            // USE BELOW IF YOU USE CORE WEB SERVICE
+                            connectionType: 'signalr',
                             currentUser: appState.currentUser,
                             onRemoteAction: (action, data) => {
                                 console.log('[App] Applying remote action:', action);
@@ -357,26 +366,11 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         try {
-            // Style the status bar
-            const statusBar = document.getElementById('collaborationStatusBar');
-            if (statusBar) {
-                statusBar.style.cssText = `
-    padding: 10px 15px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ddd;
-    font-size: 12px;
-    `;
-            }
-
+          
             // Get the ejs-pdfviewer instance from the tag
             const pdfViewerElement = document.getElementById('pdfviewer');
             if (pdfViewerElement && pdfViewerElement.ej2_instances) {
                 appState.pdfViewer = pdfViewerElement.ej2_instances[0];
-
-                // Bind event handlers
-                appState.pdfViewer.enableCollaborativeEditing = true;
-                appState.pdfViewer.resourcesLoaded = handleResourcesLoaded;
-                appState.pdfViewer.documentChanged = handleDocumentChanged;
 
                 console.log('[App] PDF Viewer instance retrieved from tag');
             }
@@ -384,8 +378,7 @@
                 throw new Error('PDF Viewer element not found or not initialized');
             }
 
-            // Update status bar
-            updateStatusBar();
+
 
             // Cleanup on page unload
             window.addEventListener('beforeunload', function() {
@@ -397,7 +390,6 @@
         } catch (error) {
             console.error('[App] Error initializing:', error);
             appState.collaborationStatus = 'error';
-            updateStatusBar();
         }
     });
 </script>
