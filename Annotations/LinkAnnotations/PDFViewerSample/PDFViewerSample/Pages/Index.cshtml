@@ -1,0 +1,79 @@
+﻿@page "{handler?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div>
+    <button type="button" id="AddInternalLink" class="btn btn-primary">Add Internal Link</button>
+    <button type="button" id="AddExternalLink" class="btn btn-primary">Add External Link</button>
+    <button type="button" id="EditLink" class="btn btn-secondary">Edit Link</button>
+    <button type="button" id="DeleteLink" class="btn btn-danger">Delete Link</button>
+</div>
+<div class="text-center">
+    <!-- To configure the server-backed PDF Viewer, include the "serviceUrl='/Index'" attribute -->
+    <ejs-pdfviewer id="pdfviewer" style="height:600px" 
+                   documentPath="https://cdn.syncfusion.com/content/pdf/pdf-succinctly.pdf" 
+                   resourceUrl="https://cdn.syncfusion.com/ej2/35.1.37/dist/ej2-pdfviewer-lib" 
+                   >
+    </ejs-pdfviewer>
+</div>
+
+<script type="text/javascript">
+
+    function getPdfViewer() {
+        return document.getElementById('pdfviewer').ej2_instances[0];
+    }
+
+    document.getElementById('AddInternalLink').addEventListener('click', function () {
+        getPdfViewer().annotation.addAnnotation('Link', {
+            offset: { x: 200, y: 480 },
+            pageNumber: 1,
+            width: 150,
+            height: 75,
+            destinationPageIndex: 4,
+            destinationLocation: { x: 100, y: 200 },
+            zoomValue: 4,
+            strokeColor: '#1433e3'
+        });
+    });
+
+    document.getElementById('AddExternalLink').addEventListener('click', function () {
+        getPdfViewer().annotation.addAnnotation('Link', {
+            offset: { x: 450, y: 480 },
+            pageNumber: 1,
+            width: 150,
+            height: 75,
+            url: 'https://www.syncfusion.com',
+            strokeColor: '#FF0000'
+        });
+    });
+
+    document.getElementById('EditLink').addEventListener('click', function () {
+        var pdfviewer = getPdfViewer();
+        for (var i = 0; i < pdfviewer.annotationCollection.length; i++) {
+            var linkAnnotation = pdfviewer.annotationCollection[i];
+            if (linkAnnotation.subject === 'Link') {
+                linkAnnotation.strokeColor = '#1fcbd4';
+                linkAnnotation.thickness = 2;
+                linkAnnotation.bounds = { left: 100, top: 100, width: 100, height: 100 };
+                linkAnnotation.url = 'https://www.google.com';
+                linkAnnotation.destinationPageIndex = 3;
+                linkAnnotation.destinationLocation = { x: 300, y: 300 };
+                linkAnnotation.zoomValue = 1;
+                pdfviewer.annotation.editAnnotation(linkAnnotation);
+                break;
+            }
+        }
+    });
+
+    document.getElementById('DeleteLink').addEventListener('click', function () {
+        var pdfviewer = getPdfViewer();
+        var linkAnnotation = pdfviewer.annotationCollection.find(function (item) {
+            return item.subject === 'Link';
+        });
+        if (linkAnnotation) {
+            pdfviewer.annotation.deleteAnnotationById(linkAnnotation.annotationId);
+        }
+    });
+
+</script>
